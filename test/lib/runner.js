@@ -103,9 +103,19 @@ function runAll(testFiles) {
   const results = [];
   for (const file of testFiles) {
     const start = Date.now();
-    // Pass through env so MP_MODEL/MP_IMAGE/MP_NODE_FLAGS reach the child.
-    // V8 flag for relaxed-simd on Node <22; harmless on Node 22+.
-    const nodeArgs = ['--experimental-wasm-relaxed-simd', file];
+    // Pass through env so MP_MODEL/MP_IMAGE reach the child.
+    //   --experimental-wasm-relaxed-simd: V8 flag for relaxed-simd on
+    //     Node <22; harmless no-op on Node 22+.
+    //   --preserve-symlinks: `npm install file:..` symlinks the package
+    //     back to the dist root, where there's no `node_modules`. With
+    //     this flag Node resolves `require('gl')` relative to the
+    //     symlink location (test/node_modules) instead of the symlink
+    //     target. Without it, the package fails to find its peer deps.
+    const nodeArgs = [
+      '--experimental-wasm-relaxed-simd',
+      '--preserve-symlinks',
+      file,
+    ];
     const result = spawnSync('node', nodeArgs, {stdio: 'inherit', env: process.env});
     results.push({
       name: path.basename(file, '.test.js'),
