@@ -1,0 +1,19 @@
+{
+  "name": "mediapipe-node-unofficial-tests",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Consumer-facing test suite for @danman113/mediapipe-node. Installs the package as a local file dependency and exercises each public API.",
+  "scripts": {
+    "test": "node run-all.js",
+    "test:smoke": "node 00-smoke.test.js",
+    "test:threads": "node 01-num-threads.test.js",
+    "test:rgba": "node 02-raw-rgba.test.js",
+    "test:yuv": "node 03-yuv.test.js",
+    "test:profile": "node 04-profile.test.js"
+  },
+  "dependencies": {
+    "@danman113/mediapipe-node": "file:..",
+    "canvas": "^2.11.2",
+    "gl": "^8.1.6"
+  }
+}

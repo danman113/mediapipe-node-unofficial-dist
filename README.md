@@ -1,4 +1,4 @@
-# @mediapipe/tasks-vision-node
+# @danman113/mediapipe-node-unofficial
 
 Stage 1 (POC) Node.js target for MediaPipe Vision Tasks. Currently exposes
 `HandLandmarker` against the upstream-prebuilt `vision_wasm_internal.wasm`,
@@ -10,8 +10,7 @@ running under Node via:
   buffers into `ImageData`.
 
 This package is a feasibility gate before the Stage 2 source build that
-adds Emscripten toolchain wiring and Node-aware C++ guards. See
-[NODE_TARGET_PLAN.md](../../../../NODE_TARGET_PLAN.md) at the repo root.
+adds Emscripten toolchain wiring and Node-aware C++ guards.
 
 ## Install
 
@@ -30,7 +29,7 @@ const {
   FilesetResolver,
   createHandLandmarker,
   decodeImageBuffer,
-} = require('@mediapipe/tasks-vision-node');
+} = require('@danman113/mediapipe-node-unofficial');
 
 async function main() {
   const fileset = await FilesetResolver.forVisionTasks();
