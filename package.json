@@ -19,10 +19,12 @@
   },
   "peerDependencies": {
     "canvas": "^2.11.0",
+    "ffmpeg-static": "^5.2.0",
     "gl": "^8.1.6"
   },
   "peerDependenciesMeta": {
     "canvas": {"optional": false},
+    "ffmpeg-static": {"optional": true},
     "gl": {"optional": false}
   },
   "license": "Apache-2.0",

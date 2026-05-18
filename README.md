@@ -17,10 +17,14 @@ adds Emscripten toolchain wiring and Node-aware C++ guards. See
 
 ```sh
 npm install @mediapipe/tasks-vision-node gl canvas
+# optional, only if you want to feed videos directly to the library:
+npm install ffmpeg-static
 ```
 
 `gl` and `canvas` are peer dependencies because they ship native bindings
-that benefit from the host's C++ toolchain at install time.
+that benefit from the host's C++ toolchain at install time. `ffmpeg-static`
+is an *optional* peer used by the [video API](#video-input); if it isn't
+installed, the library falls back to the `ffmpeg` binary on `$PATH`.
 
 ## Usage
 
@@ -48,6 +52,51 @@ async function main() {
 
 main();
 ```
+
+## Video input
+
+Feed a video directly — no pre-pass through `ffmpeg` to a PNG directory, no
+temp files. The library spawns `ffmpeg` itself, streams raw NV12 frames over
+a pipe, and converts to RGBA in-WASM via the SIMD libyuv path. Steady-state
+memory is one frame (~1.4MB at 720p).
+
+```js
+const {createReadStream} = require('node:fs');
+const {
+  FilesetResolver,
+  createHandLandmarker,
+  openVideo,
+  detectVideoFile,
+} = require('@mediapipe/tasks-vision-node');
+
+async function main() {
+  const fileset = await FilesetResolver.forVisionTasks();
+  const detector = await createHandLandmarker(fileset, {
+    baseOptions: {modelAssetPath: 'hand_landmarker.task'},
+    numHands: 2,
+    runningMode: 'VIDEO',
+  });
+
+  // Low-level: iterator. Use this when you want per-frame control (early
+  // exit, async work between frames, custom timestamping, etc.).
+  for await (const {imageData, tsMs} of openVideo('clip.mp4', {detector})) {
+    const result = detector.detectForVideo(imageData, tsMs);
+    // … do something with result
+  }
+
+  // High-level: one call, returns everything (also accepts onFrame callback).
+  const results = await detectVideoFile(detector, 'clip.mp4');
+
+  // Stream input — e.g. piping bytes from S3 or HTTP without touching disk.
+  const piped = await detectVideoFile(detector, createReadStream('clip.mp4'));
+}
+```
+
+Inputs accepted: file path (`string`), `Buffer`/`Uint8Array`, or any Node
+`Readable` stream. For Buffer/stream input you may need to pass
+`{width, height, fps}` explicitly if the ffmpeg banner can't parse a
+container header — see [video_decoder.ts](./video_decoder.ts) for the
+options reference.
 
 ## Limitations (Stage 1)
 
