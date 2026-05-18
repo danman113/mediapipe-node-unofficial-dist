@@ -11,8 +11,9 @@ is isolated between tests.
 npm install
 ```
 
-`npm install` pulls `canvas`, `gl`, and the parent dist directory as a
-local file dependency (`file:..`).
+`npm install` pulls `canvas`, `gl`, `ffmpeg-static`, and the parent dist
+directory as a local file dependency (`file:..`). `ffmpeg-static` is only
+needed by `05-video.test.js` — the other tests run without it.
 
 ## Fixtures
 
@@ -47,6 +48,7 @@ npm run test:threads      # 01-num-threads.test.js
 npm run test:rgba         # 02-raw-rgba.test.js
 npm run test:yuv          # 03-yuv.test.js
 npm run test:profile      # 04-profile.test.js
+npm run test:video        # 05-video.test.js
 ```
 
 ## What each test covers
@@ -58,6 +60,7 @@ npm run test:profile      # 04-profile.test.js
 | `02-raw-rgba.test.js` | `createImageData` produces **bit-identical** landmarks vs `decodeImageBuffer` (delta=0), and is >10× faster. |
 | `03-yuv.test.js` | `decodeYuvBuffer` supports NV12, NV21, I420; round-trip through RGBA→YUV→RGBA lands within YUV chroma quantization tolerance (5e-3). |
 | `04-profile.test.js` | Profile API toggles on/off, records four shim phases (`shim.malloc`, `shim.heapCopy`, `shim.wasmPush`, `shim.free`), reset clears them. |
+| `05-video.test.js` | `openVideo` iterator (frame count, dims, monotonic ts, ImageData shape), `detectVideoFile` produces N results with landmarks within YUV/h264 tolerance vs the RGBA reference, Readable-stream input, early-break cleanup, missing-file error, RGBA fallback path. Synthesizes its own 1s/30fps MP4 from `pointing_up.jpg` via `ffmpeg-static`. |
 
 ## Exit codes
 

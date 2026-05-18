@@ -9,11 +9,13 @@
     "test:threads": "node --experimental-wasm-relaxed-simd --preserve-symlinks 01-num-threads.test.js",
     "test:rgba": "node --experimental-wasm-relaxed-simd --preserve-symlinks 02-raw-rgba.test.js",
     "test:yuv": "node --experimental-wasm-relaxed-simd --preserve-symlinks 03-yuv.test.js",
-    "test:profile": "node --experimental-wasm-relaxed-simd --preserve-symlinks 04-profile.test.js"
+    "test:profile": "node --experimental-wasm-relaxed-simd --preserve-symlinks 04-profile.test.js",
+    "test:video": "node --experimental-wasm-relaxed-simd --preserve-symlinks 05-video.test.js"
   },
   "dependencies": {
     "@danman113/mediapipe-node": "file:..",
     "canvas": "^2.11.2",
+    "ffmpeg-static": "^5.2.0",
     "gl": "^8.1.6"
   }
 }
