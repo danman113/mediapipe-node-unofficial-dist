@@ -94,9 +94,10 @@ function main() {
     return;
   }
 
-  // Clear dist repo, preserving .git/ and build.js itself
+  // Clear dist repo, preserving repo-owned files (not bazel artifacts)
+  const PRESERVE = new Set(['.git', '.gitignore', '.github', 'build.js', 'test']);
   for (const entry of fs.readdirSync(DIST_ROOT)) {
-    if (entry === '.git' || entry === 'build.js') continue;
+    if (PRESERVE.has(entry)) continue;
     fs.rmSync(path.join(DIST_ROOT, entry), {recursive: true, force: true});
   }
 

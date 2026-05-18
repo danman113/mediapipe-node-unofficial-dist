@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+fixtures/*.task
+fixtures/*.jpg
+fixtures/*.png
+fixtures/*.webm
+fixtures/*.mp4
+*.golden.json
