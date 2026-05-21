@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@danman113/mediapipe-node": "file:..",
-    "canvas": "^2.11.2",
+    "canvas": "^3.0.0",
     "gl": "^8.1.6"
   }
 }
